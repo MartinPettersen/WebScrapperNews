@@ -1,6 +1,6 @@
 ﻿namespace WebScrapperNews
 {
-    partial class Form1
+    partial class WebScrapper
     {
         /// <summary>
         /// Required designer variable.
@@ -45,6 +45,7 @@
             // addSiteButton
             // 
             this.addSiteButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(249)))), ((int)(((byte)(115)))), ((int)(((byte)(22)))));
+            this.addSiteButton.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.addSiteButton.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.addSiteButton.Location = new System.Drawing.Point(550, 68);
             this.addSiteButton.Name = "addSiteButton";
@@ -63,19 +64,19 @@
             this.siteListBox.Size = new System.Drawing.Size(783, 207);
             this.siteListBox.TabIndex = 2;
             // 
-            // Form1
+            // WebScrapper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(41)))), ((int)(((byte)(37)))), ((int)(((byte)(36)))));
-            this.ClientSize = new System.Drawing.Size(919, 411);
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
+            this.ClientSize = new System.Drawing.Size(914, 410);
             this.Controls.Add(this.siteListBox);
             this.Controls.Add(this.addSiteButton);
             this.Controls.Add(this.siteTextBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "WebScrapper";
+            this.Text = "Nyhets Web Scrapper";
             this.ResumeLayout(false);
             this.PerformLayout();
 
