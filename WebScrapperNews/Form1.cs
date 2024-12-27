@@ -14,6 +14,7 @@ namespace WebScrapperNews
     {
 
         List<string> WebSites = new List<string>();
+        List<string> KeyWords = new List<string>();
         public WebScrapper()
         {
             InitializeComponent();
@@ -32,6 +33,20 @@ namespace WebScrapperNews
             WebSites.RemoveAt(SiteListBox.SelectedIndex);
             SiteListBox.DataSource = null;
             SiteListBox.DataSource = WebSites;
+        }
+
+        private void AddKeyButton_Click(object sender, EventArgs e)
+        {
+            KeyWords.Add(KeyTextBox.Text);
+            KeyListBox.DataSource = null;
+            KeyListBox.DataSource = KeyWords;
+        }
+
+        private void RemoveKeyButton_Click(object sender, EventArgs e)
+        {
+            KeyWords.RemoveAt(KeyListBox.SelectedIndex);
+            KeyListBox.DataSource = null;
+            KeyListBox.DataSource = KeyWords;
         }
     }
 }
