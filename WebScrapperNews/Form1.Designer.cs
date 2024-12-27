@@ -158,7 +158,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(14F, 29F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.ClientSize = new System.Drawing.Size(1155, 777);
+            this.ClientSize = new System.Drawing.Size(1205, 806);
             this.Controls.Add(this.ResultBox);
             this.Controls.Add(this.RunCrawlerButton);
             this.Controls.Add(this.RemoveKeyButton);
