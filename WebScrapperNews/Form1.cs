@@ -12,14 +12,26 @@ namespace WebScrapperNews
 {
     public partial class WebScrapper : Form
     {
+
+        List<string> WebSites = new List<string>();
         public WebScrapper()
         {
             InitializeComponent();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void addSiteButton_Click(object sender, EventArgs e)
         {
+            WebSites.Add(SiteTextBox.Text);
+            SiteListBox.DataSource = null;
+            SiteListBox.DataSource = WebSites;
 
+        }
+
+        private void DeleteSiteButton_Click(object sender, EventArgs e)
+        {
+            WebSites.RemoveAt(SiteListBox.SelectedIndex);
+            SiteListBox.DataSource = null;
+            SiteListBox.DataSource = WebSites;
         }
     }
 }

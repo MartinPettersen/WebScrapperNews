@@ -28,19 +28,20 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.siteTextBox = new System.Windows.Forms.TextBox();
+            this.SiteTextBox = new System.Windows.Forms.TextBox();
             this.addSiteButton = new System.Windows.Forms.Button();
-            this.siteListBox = new System.Windows.Forms.ListBox();
+            this.SiteListBox = new System.Windows.Forms.ListBox();
+            this.DeleteSiteButton = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // siteTextBox
+            // SiteTextBox
             // 
-            this.siteTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.siteTextBox.Location = new System.Drawing.Point(65, 74);
-            this.siteTextBox.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
-            this.siteTextBox.Name = "siteTextBox";
-            this.siteTextBox.Size = new System.Drawing.Size(468, 34);
-            this.siteTextBox.TabIndex = 0;
+            this.SiteTextBox.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.SiteTextBox.Location = new System.Drawing.Point(65, 74);
+            this.SiteTextBox.Margin = new System.Windows.Forms.Padding(5);
+            this.SiteTextBox.Name = "SiteTextBox";
+            this.SiteTextBox.Size = new System.Drawing.Size(468, 34);
+            this.SiteTextBox.TabIndex = 0;
             // 
             // addSiteButton
             // 
@@ -53,16 +54,29 @@
             this.addSiteButton.TabIndex = 1;
             this.addSiteButton.Text = "Legg til Side";
             this.addSiteButton.UseVisualStyleBackColor = false;
-            this.addSiteButton.Click += new System.EventHandler(this.button1_Click);
+            this.addSiteButton.Click += new System.EventHandler(this.addSiteButton_Click);
             // 
-            // siteListBox
+            // SiteListBox
             // 
-            this.siteListBox.FormattingEnabled = true;
-            this.siteListBox.ItemHeight = 29;
-            this.siteListBox.Location = new System.Drawing.Point(65, 126);
-            this.siteListBox.Name = "siteListBox";
-            this.siteListBox.Size = new System.Drawing.Size(783, 207);
-            this.siteListBox.TabIndex = 2;
+            this.SiteListBox.FormattingEnabled = true;
+            this.SiteListBox.ItemHeight = 29;
+            this.SiteListBox.Location = new System.Drawing.Point(65, 126);
+            this.SiteListBox.Name = "SiteListBox";
+            this.SiteListBox.Size = new System.Drawing.Size(783, 207);
+            this.SiteListBox.TabIndex = 2;
+            // 
+            // DeleteSiteButton
+            // 
+            this.DeleteSiteButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(239)))), ((int)(((byte)(68)))), ((int)(((byte)(68)))));
+            this.DeleteSiteButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.DeleteSiteButton.ForeColor = System.Drawing.SystemColors.Control;
+            this.DeleteSiteButton.Location = new System.Drawing.Point(65, 344);
+            this.DeleteSiteButton.Name = "DeleteSiteButton";
+            this.DeleteSiteButton.Size = new System.Drawing.Size(783, 44);
+            this.DeleteSiteButton.TabIndex = 3;
+            this.DeleteSiteButton.Text = "Fjern Side";
+            this.DeleteSiteButton.UseVisualStyleBackColor = false;
+            this.DeleteSiteButton.Click += new System.EventHandler(this.DeleteSiteButton_Click);
             // 
             // WebScrapper
             // 
@@ -70,11 +84,12 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
             this.ClientSize = new System.Drawing.Size(914, 410);
-            this.Controls.Add(this.siteListBox);
+            this.Controls.Add(this.DeleteSiteButton);
+            this.Controls.Add(this.SiteListBox);
             this.Controls.Add(this.addSiteButton);
-            this.Controls.Add(this.siteTextBox);
+            this.Controls.Add(this.SiteTextBox);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 13.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Margin = new System.Windows.Forms.Padding(5, 5, 5, 5);
+            this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "WebScrapper";
             this.Text = "Nyhets Web Scrapper";
             this.ResumeLayout(false);
@@ -84,9 +99,10 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox siteTextBox;
+        private System.Windows.Forms.TextBox SiteTextBox;
         private System.Windows.Forms.Button addSiteButton;
-        private System.Windows.Forms.ListBox siteListBox;
+        private System.Windows.Forms.ListBox SiteListBox;
+        private System.Windows.Forms.Button DeleteSiteButton;
     }
 }
 
