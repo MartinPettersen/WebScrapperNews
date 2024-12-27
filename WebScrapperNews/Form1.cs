@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Net.WebRequestMethods;
@@ -38,8 +39,23 @@ namespace WebScrapperNews
                     //ResultBox.Text = url;
                     var client = new System.Net.Http.HttpClient();
                     string content = client.GetStringAsync(url).Result;
-                    ResultBox.Text = content;
 
+
+                    string pattern = @"(?<=^User-agent:.*?)([\s\S]*?)(?=\r?\n\s*\r?\n)
+";
+
+                    Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.Singleline);
+
+                    Match match = regex.Match(content);
+
+                    if (match.Success)
+                    {
+                        ResultBox.Text = match.Value;
+                    } else
+                    {
+                        ResultBox.Text = content;
+
+                    }
                 }
                 else
                 {
