@@ -37,7 +37,7 @@
             this.KeyListBox = new System.Windows.Forms.ListBox();
             this.RemoveKeyButton = new System.Windows.Forms.Button();
             this.RunCrawlerButton = new System.Windows.Forms.Button();
-            this.ResultBox = new System.Windows.Forms.ListBox();
+            this.ResultBox = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // SiteTextBox
@@ -142,15 +142,15 @@
             this.RunCrawlerButton.TabIndex = 10;
             this.RunCrawlerButton.Text = "Kjør";
             this.RunCrawlerButton.UseVisualStyleBackColor = false;
+            this.RunCrawlerButton.Click += new System.EventHandler(this.RunCrawlerButton_Click);
             // 
             // ResultBox
             // 
-            this.ResultBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(63)))), ((int)(((byte)(70)))));
-            this.ResultBox.FormattingEnabled = true;
-            this.ResultBox.ItemHeight = 29;
-            this.ResultBox.Location = new System.Drawing.Point(726, 186);
+            this.ResultBox.Location = new System.Drawing.Point(726, 171);
+            this.ResultBox.Multiline = true;
             this.ResultBox.Name = "ResultBox";
-            this.ResultBox.Size = new System.Drawing.Size(417, 555);
+            this.ResultBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.ResultBox.Size = new System.Drawing.Size(417, 570);
             this.ResultBox.TabIndex = 11;
             // 
             // WebScrapper
@@ -189,7 +189,7 @@
         private System.Windows.Forms.ListBox KeyListBox;
         private System.Windows.Forms.Button RemoveKeyButton;
         private System.Windows.Forms.Button RunCrawlerButton;
-        private System.Windows.Forms.ListBox ResultBox;
+        private System.Windows.Forms.TextBox ResultBox;
     }
 }
 
