@@ -19,7 +19,7 @@ namespace WebScrapperNews
 
         List<string> WebSites = new List<string>();
         List<string> KeyWords = new List<string>();
-        List<string> Results = new List<string>();
+        List<{ "url": string, "keywords": string[]}> Results = new List<{ "url": string, "keywords": string[] }>();
 
         public WebScrapper()
         {
