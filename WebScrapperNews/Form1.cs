@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -38,7 +39,7 @@ namespace WebScrapperNews
                 if (doc.DocumentNode != null)
                 {
                     var client = new System.Net.Http.HttpClient();
-                    string content = client.GetStringAsync(url).Result;
+                    string content = client.GetStringAsync(combinedUrl).Result;
 
 
                     string pattern = @"User-agent: \*\r?\n(?:(?:Sitemap: .*?\r?\n)?)((?:Disallow: .*?\r?\n)*)";
@@ -49,12 +50,14 @@ namespace WebScrapperNews
 
                     if (match.Success)
                     {
-                        return new string[] match.Value;
+                        string[] disallows = match.Groups[1].Value.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Replace("Disallow: ", "").Trim()).ToArray();
+                        return disallows;
                         // ResultBox.Text = match.Value;
                     }
                     else
                     {
-                        ResultBox.Text = content;
+                        return new string[] {};
+                        // ResultBox.Text = content;
 
                     }
                 }
@@ -70,7 +73,85 @@ namespace WebScrapperNews
 
             return new string[] { "test", "test" };
         }
-        private void ScrapePage(string url)
+
+        
+        private void GetArticle(string[] disallows, Match match)
+        {
+            foreach (var disallow in disallows)
+            {
+                string url = match.Groups[1].Value;
+
+                if (!CheckIfUrlIllegal(disallows, match))
+                {
+                    HtmlWeb web = new HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = web.Load(url);
+
+                    if (doc.DocumentNode != null)
+                    {
+                        string test = doc.DocumentNode.OuterHtml;
+                        bool res = CheckIfKeyMatch(test);
+                        
+                        if (res)
+                        {
+                            ResultBox.Text = url;
+                        }
+
+                    }
+                }
+
+                
+            }
+        }
+        private bool CheckIfUrlIllegal(string[] disallows, Match match)
+        {
+            foreach (var disallow in disallows)
+            {
+                string url = match.Groups[1].Value;
+                bool illegal = url.IndexOf(disallow, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                if (illegal)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool CheckIfKeyMatch(string text)
+        {
+            foreach (var keyword in KeyWords)
+            {
+                
+                bool match = text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                if (match)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        private void FindArticles(string[] disallows, MatchCollection matches)
+        {
+            foreach (Match match in matches)
+            {
+                string content = match.Groups[0].Value;
+
+                string pattern = @"href=""([^""]+)""";
+
+                // Create the regex object
+                Regex regex = new Regex(pattern);
+
+                // Find all matches
+                Match matchUrl = regex.Match(content);
+
+                GetArticle(disallows, matchUrl);
+                //ResultBox.Text = matchUrl.Groups[1].Value;
+
+            }
+        }
+
+        private void ScrapePage(string[] disallows, string url)
         {
             try
             {
@@ -79,26 +160,29 @@ namespace WebScrapperNews
 
                 if (doc.DocumentNode != null)
                 {
-                    //ResultBox.Text = doc.DocumentNode.OuterHtml;
-                    //ResultBox.Text = url;
-                    var client = new System.Net.Http.HttpClient();
-                    string content = client.GetStringAsync(url).Result;
+                    string test = doc.DocumentNode.OuterHtml;
+                    //ResultBox.Text = test;
+
+                    //string articlePattern = @"<article\b[^>]*>.*?<\/article>";
+                    //string sectionPattern = @"<section\b[^>]*>.*?<\/section>";
+                    string combinedPattern = @"<(section|article)\b[^>]*>.*?<\/(section|article)>";
 
 
-                    string pattern = @"User-agent: \*\r?\n(?:(?:Sitemap: .*?\r?\n)?)((?:Disallow: .*?\r?\n)*)";
+                    Regex regex = new Regex(combinedPattern, RegexOptions.Multiline | RegexOptions.Singleline);
 
-                    Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.Singleline);
+                    MatchCollection matches = regex.Matches(test);
 
-                    Match match = regex.Match(content);
 
-                    if (match.Success)
+                    if (matches.Count > 0)
                     {
-                        ResultBox.Text = match.Value;
-                    } else
-                    {
-                        ResultBox.Text = content;
-
+                        //ResultBox.Text = matches[6].Value;
+                        FindArticles(disallows, matches);
                     }
+                    else
+                    {
+                        MessageBox.Show("No articles found on this page.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+
                 }
                 else
                 {
@@ -119,7 +203,9 @@ namespace WebScrapperNews
             for ( int i = 0; i < WebSites.Count; i++)
             {
                 string combinedUrl = startText + WebSites[i] + robotText;
-                ScrapePage (combinedUrl);
+                string[] disallows = getDisallows(WebSites[i]);
+                string url = "https://" + WebSites[i];
+                ScrapePage (disallows , url);
                 //Results.Add(combinedUrl);
             }
             //ResultBox.DataSource = null;
