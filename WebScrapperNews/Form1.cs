@@ -25,7 +25,51 @@ namespace WebScrapperNews
             InitializeComponent();
         }
 
+        private string[] getDisallows(string url)
+        {
+            try
+            {
+                HtmlWeb web = new HtmlWeb();
+                string robotText = "/robots.txt";
+                string startText = "https://";
+                string combinedUrl = startText + url + robotText;
+                HtmlAgilityPack.HtmlDocument doc = web.Load(combinedUrl);
 
+                if (doc.DocumentNode != null)
+                {
+                    var client = new System.Net.Http.HttpClient();
+                    string content = client.GetStringAsync(url).Result;
+
+
+                    string pattern = @"User-agent: \*\r?\n(?:(?:Sitemap: .*?\r?\n)?)((?:Disallow: .*?\r?\n)*)";
+
+                    Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.Singleline);
+
+                    Match match = regex.Match(content);
+
+                    if (match.Success)
+                    {
+                        return new string[] match.Value;
+                        // ResultBox.Text = match.Value;
+                    }
+                    else
+                    {
+                        ResultBox.Text = content;
+
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Failed to load or parse the HTML document.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"An error occurred: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            return new string[] { "test", "test" };
+        }
         private void ScrapePage(string url)
         {
             try
@@ -41,8 +85,7 @@ namespace WebScrapperNews
                     string content = client.GetStringAsync(url).Result;
 
 
-                    string pattern = @"(?<=^User-agent:.*?)([\s\S]*?)(?=\r?\n\s*\r?\n)
-";
+                    string pattern = @"User-agent: \*\r?\n(?:(?:Sitemap: .*?\r?\n)?)((?:Disallow: .*?\r?\n)*)";
 
                     Regex regex = new Regex(pattern, RegexOptions.Multiline | RegexOptions.Singleline);
 
