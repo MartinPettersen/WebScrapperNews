@@ -6,6 +6,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Policy;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -19,7 +20,8 @@ namespace WebScrapperNews
 
         List<string> WebSites = new List<string>();
         List<string> KeyWords = new List<string>();
-        List<{ "url": string, "keywords": string[]}> Results = new List<{ "url": string, "keywords": string[] }>();
+        List<(string Url, string[] Keywords)> Results = new List<(string Url, string[] Keywords)>();
+
 
         public WebScrapper()
         {
@@ -77,9 +79,11 @@ namespace WebScrapperNews
         
         private void GetArticle(string[] disallows, Match match)
         {
+            List<string> MatchingKeys = new List<string>();
+            string url = match.Groups[1].Value;
+
             foreach (var disallow in disallows)
             {
-                string url = match.Groups[1].Value;
 
                 if (!CheckIfUrlIllegal(disallows, match))
                 {
@@ -89,11 +93,18 @@ namespace WebScrapperNews
                     if (doc.DocumentNode != null)
                     {
                         string test = doc.DocumentNode.OuterHtml;
-                        bool res = CheckIfKeyMatch(test);
+                        List<string> Matches = CheckIfKeyMatch(test);
                         
-                        if (res)
+                        if (Matches.Count > 0)
                         {
-                            ResultBox.Text = url;
+                            //ResultBox.Text = url;
+                            //Results.Add((url, MatchingKeys.ToArray()));
+
+                            bool exists = MatchingKeys.Contains(Matches[0]);
+                            if ( !exists)
+                            {
+                                MatchingKeys.AddRange(Matches);
+                            }
                         }
 
                     }
@@ -101,7 +112,12 @@ namespace WebScrapperNews
 
                 
             }
-        }
+
+            if (MatchingKeys.Count > 0)
+            {
+                Results.Add((url, MatchingKeys.ToArray()));
+            }
+            }
         private bool CheckIfUrlIllegal(string[] disallows, Match match)
         {
             foreach (var disallow in disallows)
@@ -117,8 +133,9 @@ namespace WebScrapperNews
             return false;
         }
 
-        private bool CheckIfKeyMatch(string text)
+        private List<string> CheckIfKeyMatch(string text)
         {
+            List<string> MatchingKeys = new List<string>();
             foreach (var keyword in KeyWords)
             {
                 
@@ -126,10 +143,21 @@ namespace WebScrapperNews
 
                 if (match)
                 {
-                    return true;
+                    MatchingKeys.Add(keyword);
                 }
             }
-            return false;
+            return MatchingKeys;
+        }
+
+        private void DisplayResults()
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach ((string Url, string[] Keywords) result in Results)
+            {
+
+                sb.AppendLine(""+result.Url + ": " + string.Join(", ", result.Keywords));
+            }
+            ResultBox.Text = sb.ToString();
         }
         private void FindArticles(string[] disallows, MatchCollection matches)
         {
@@ -147,6 +175,8 @@ namespace WebScrapperNews
 
                 GetArticle(disallows, matchUrl);
                 //ResultBox.Text = matchUrl.Groups[1].Value;
+
+                DisplayResults();
 
             }
         }
