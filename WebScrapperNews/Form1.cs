@@ -52,13 +52,13 @@ namespace WebScrapperNews
 
                     if (match.Success)
                     {
-                        string[] disallows = match.Groups[1].Value.Split(new[] {"\r\n", "\n"}, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Replace("Disallow: ", "").Trim()).ToArray();
+                        string[] disallows = match.Groups[1].Value.Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries).Select(line => line.Replace("Disallow: ", "").Trim()).ToArray();
                         return disallows;
                         // ResultBox.Text = match.Value;
                     }
                     else
                     {
-                        return new string[] {};
+                        return new string[] { };
                         // ResultBox.Text = content;
 
                     }
@@ -76,12 +76,16 @@ namespace WebScrapperNews
             return new string[] { "test", "test" };
         }
 
-        
+
         private void GetArticle(string[] disallows, Match match)
         {
             List<string> MatchingKeys = new List<string>();
             string url = match.Groups[1].Value;
-
+            //ResultBox.AppendText($"Attempting to load URL: {url}\n");
+            if (string.IsNullOrWhiteSpace(url))
+            {
+                return;
+            }
             foreach (var disallow in disallows)
             {
 
@@ -92,32 +96,45 @@ namespace WebScrapperNews
 
                     if (doc.DocumentNode != null)
                     {
-                        string test = doc.DocumentNode.OuterHtml;
-                        List<string> Matches = CheckIfKeyMatch(test);
-                        
-                        if (Matches.Count > 0)
+                        try
                         {
-                            //ResultBox.Text = url;
-                            //Results.Add((url, MatchingKeys.ToArray()));
 
-                            bool exists = MatchingKeys.Contains(Matches[0]);
-                            if ( !exists)
+                            string test = doc.DocumentNode.OuterHtml;
+                            List<string> Matches = CheckIfKeyMatch(test);
+
+                            if (Matches.Count > 0)
                             {
-                                MatchingKeys.AddRange(Matches);
+                                //ResultBox.Text = url;
+                                //Results.Add((url, MatchingKeys.ToArray()));
+
+                                bool exists = MatchingKeys.Contains(Matches[0]);
+                                if (!exists)
+                                {
+                                    MatchingKeys.AddRange(Matches);
+                                    DisplayResults();
+
+                                }
                             }
+                        }
+                        catch (Exception e)
+                        {
+                            ResultBox.AppendText($"Failed with URL: {url}\nError: {e.Message}\nStack Trace: {e.StackTrace}\n\n");
+                            MessageBox.Show($"Failed with URL: {url}\nError: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+
                         }
 
                     }
                 }
 
-                
+
             }
 
             if (MatchingKeys.Count > 0)
             {
                 Results.Add((url, MatchingKeys.ToArray()));
             }
-            }
+        }
         private bool CheckIfUrlIllegal(string[] disallows, Match match)
         {
             foreach (var disallow in disallows)
@@ -138,7 +155,7 @@ namespace WebScrapperNews
             List<string> MatchingKeys = new List<string>();
             foreach (var keyword in KeyWords)
             {
-                
+
                 bool match = text.IndexOf(keyword, StringComparison.OrdinalIgnoreCase) >= 0;
 
                 if (match)
@@ -151,11 +168,15 @@ namespace WebScrapperNews
 
         private void DisplayResults()
         {
+            ResultBox.Clear();
+            ResultBox.DetectUrls = true;
+            ResultBox.ReadOnly = true;
+
             StringBuilder sb = new StringBuilder();
             foreach ((string Url, string[] Keywords) result in Results)
             {
 
-                sb.AppendLine(""+result.Url + ": " + string.Join(", ", result.Keywords));
+                sb.AppendLine("" + result.Url + ": " + string.Join(", ", result.Keywords));
             }
             ResultBox.Text = sb.ToString();
         }
@@ -176,7 +197,6 @@ namespace WebScrapperNews
                 GetArticle(disallows, matchUrl);
                 //ResultBox.Text = matchUrl.Groups[1].Value;
 
-                DisplayResults();
 
             }
         }
@@ -230,12 +250,12 @@ namespace WebScrapperNews
             string robotText = "/robots.txt";
             string startText = "https://";
 
-            for ( int i = 0; i < WebSites.Count; i++)
+            for (int i = 0; i < WebSites.Count; i++)
             {
                 string combinedUrl = startText + WebSites[i] + robotText;
                 string[] disallows = getDisallows(WebSites[i]);
                 string url = "https://" + WebSites[i];
-                ScrapePage (disallows , url);
+                ScrapePage(disallows, url);
                 //Results.Add(combinedUrl);
             }
             //ResultBox.DataSource = null;
@@ -273,7 +293,27 @@ namespace WebScrapperNews
 
         private void RunCrawlerButton_Click(object sender, EventArgs e)
         {
+            ResultBox.Clear();
             ScrapeWeb();
+        }
+
+        private void ResultBox_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ResultBox_TextChanged_1(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ResultBox_LinkClicked(object sender, LinkClickedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+            {
+                FileName = e.LinkText,
+                UseShellExecute = true
+            });
         }
     }
 }

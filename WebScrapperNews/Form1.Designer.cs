@@ -37,7 +37,7 @@
             this.KeyListBox = new System.Windows.Forms.ListBox();
             this.RemoveKeyButton = new System.Windows.Forms.Button();
             this.RunCrawlerButton = new System.Windows.Forms.Button();
-            this.ResultBox = new System.Windows.Forms.TextBox();
+            this.ResultBox = new System.Windows.Forms.RichTextBox();
             this.SuspendLayout();
             // 
             // SiteTextBox
@@ -146,12 +146,14 @@
             // 
             // ResultBox
             // 
-            this.ResultBox.Location = new System.Drawing.Point(726, 171);
-            this.ResultBox.Multiline = true;
+            this.ResultBox.Location = new System.Drawing.Point(726, 184);
             this.ResultBox.Name = "ResultBox";
-            this.ResultBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.ResultBox.Size = new System.Drawing.Size(417, 570);
-            this.ResultBox.TabIndex = 11;
+            this.ResultBox.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.ResultBox.Size = new System.Drawing.Size(417, 557);
+            this.ResultBox.TabIndex = 12;
+            this.ResultBox.Text = "";
+            this.ResultBox.LinkClicked += new System.Windows.Forms.LinkClickedEventHandler(this.ResultBox_LinkClicked);
+            this.ResultBox.TextChanged += new System.EventHandler(this.ResultBox_TextChanged_1);
             // 
             // WebScrapper
             // 
@@ -189,7 +191,7 @@
         private System.Windows.Forms.ListBox KeyListBox;
         private System.Windows.Forms.Button RemoveKeyButton;
         private System.Windows.Forms.Button RunCrawlerButton;
-        private System.Windows.Forms.TextBox ResultBox;
+        private System.Windows.Forms.RichTextBox ResultBox;
     }
 }
 
