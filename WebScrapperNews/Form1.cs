@@ -92,6 +92,8 @@ namespace WebScrapperNews
                 if (!CheckIfUrlIllegal(disallows, match))
                 {
                     HtmlWeb web = new HtmlWeb();
+                    web.UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
                     HtmlAgilityPack.HtmlDocument doc = web.Load(url);
 
                     if (doc.DocumentNode != null)
