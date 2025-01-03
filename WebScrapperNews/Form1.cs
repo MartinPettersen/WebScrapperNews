@@ -82,7 +82,13 @@ namespace WebScrapperNews
             List<string> MatchingKeys = new List<string>();
             string url = match.Groups[1].Value;
             //ResultBox.AppendText($"Attempting to load URL: {url}\n");
+            //MessageBox.Show($"Attempting to load URL: {url}\n");
+
             if (string.IsNullOrWhiteSpace(url))
+            {
+                return;
+            }
+            if (url.StartsWith("#"))
             {
                 return;
             }
@@ -120,9 +126,9 @@ namespace WebScrapperNews
                         }
                         catch (Exception e)
                         {
-                            ResultBox.AppendText($"Failed with URL: {url}\nError: {e.Message}\nStack Trace: {e.StackTrace}\n\n");
-                            MessageBox.Show($"Failed with URL: {url}\nError: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
+                            //ResultBox.AppendText($"Failed with URL: {url}\nError: {e.Message}\nStack Trace: {e.StackTrace}\n\n");
+                            //MessageBox.Show($"Failed with URL: {url}\nError: {e.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            Console.WriteLine(e.ToString());
 
                         }
 
@@ -178,7 +184,7 @@ namespace WebScrapperNews
             foreach ((string Url, string[] Keywords) result in Results)
             {
 
-                sb.AppendLine("" + result.Url + ": " + string.Join(", ", result.Keywords));
+                sb.AppendLine("" + result.Url + ": " + string.Join(", ", result.Keywords) + "\n");
             }
             ResultBox.Text = sb.ToString();
         }
@@ -188,19 +194,18 @@ namespace WebScrapperNews
             {
                 string content = match.Groups[0].Value;
 
-                string pattern = @"href=""([^""]+)""";
+                string pattern = @"href=""([^""]+)(?<!\.(?:css|js|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|eot))""";
+                Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
 
-                // Create the regex object
-                Regex regex = new Regex(pattern);
-
-                // Find all matches
                 Match matchUrl = regex.Match(content);
 
+                //ResultBox.AppendText($"Attempting to load URL: {matchUrl}\n");
                 GetArticle(disallows, matchUrl);
                 //ResultBox.Text = matchUrl.Groups[1].Value;
 
 
             }
+            RunCrawlerButton.Text = "Kjør";
         }
 
         private void ScrapePage(string[] disallows, string url)
@@ -269,7 +274,7 @@ namespace WebScrapperNews
             WebSites.Add(SiteTextBox.Text);
             SiteListBox.DataSource = null;
             SiteListBox.DataSource = WebSites;
-
+            SiteTextBox.Text = "";
         }
 
         private void DeleteSiteButton_Click(object sender, EventArgs e)
@@ -284,6 +289,7 @@ namespace WebScrapperNews
             KeyWords.Add(KeyTextBox.Text);
             KeyListBox.DataSource = null;
             KeyListBox.DataSource = KeyWords;
+            KeyTextBox.Text = "";
         }
 
         private void RemoveKeyButton_Click(object sender, EventArgs e)
@@ -295,7 +301,10 @@ namespace WebScrapperNews
 
         private void RunCrawlerButton_Click(object sender, EventArgs e)
         {
+            ResultBox.Text = "";
             ResultBox.Clear();
+            Results.Clear();
+            RunCrawlerButton.Text = "Kjører...";
             ScrapeWeb();
         }
 
